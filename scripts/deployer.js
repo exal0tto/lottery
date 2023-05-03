@@ -25,8 +25,12 @@ exports.Deployer = class Deployer {
     return deploy('MockVRFCoordinator');
   }
 
+  _deployToken() {
+    return deploy('LotteryToken');
+  }
+
   async deployToken() {
-    const token = await deploy('LotteryToken');
+    const token = await this._deployToken();
     if (this._deployer !== this._owner) {
       const totalSupply = await token.totalSupply();
       let tx = await send(token, 'transfer', this._owner, totalSupply);
@@ -105,11 +109,31 @@ exports.Deployer = class Deployer {
     }
   }
 
-  async deployAll(vrfCoordinatorAddress = process.env.CHAINLINK_VRF_COORDINATOR) {
+  async deployGovernance(vrfCoordinatorAddress = process.env.CHAINLINK_VRF_COORDINATOR) {
     const token = await this.deployToken();
     const {lottery} = await this.deployLottery(vrfCoordinatorAddress);
     const controller = await this.deployController(token, lottery);
     const governor = await this.deployGovernor(token, controller);
     return {token, lottery, controller, governor};
+  }
+
+  async deployICO(token, lottery) {
+    const ico = await deploy('LotteryICO', [token.address, lottery.address]);
+    let tx = await send(token, 'transfer', ico.address, await token.totalSupply());
+    console.log(`Total EXL supply transferred to ${ico.address} -- txid ${tx.hash}`);
+    if (this._deployer !== this._owner) {
+      tx = await send(ico, 'transferOwnership', this._owner);
+      console.log(`ICO ownership transferred to ${this._owner} -- txid ${tx.hash}`);
+    }
+    return ico;
+  }
+
+  async deployAll(vrfCoordinatorAddress = process.env.CHAINLINK_VRF_COORDINATOR) {
+    const token = await this._deployToken();
+    const {lottery} = await this.deployLottery(vrfCoordinatorAddress);
+    const controller = await this.deployController(token, lottery);
+    const governor = await this.deployGovernor(token, controller);
+    const ico = await this.deployICO(token, lottery);
+    return {token, lottery, controller, governor, ico};
   }
 };

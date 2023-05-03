@@ -11,8 +11,8 @@ struct TicketData {
   ///   than storing them separately.
   uint256 hash;
 
-  /// @dev The timestamp of the transaction that bought the ticket.
-  uint128 timestamp;
+  /// @dev The block number of the transaction that bought the ticket.
+  uint128 blockNumber;
 
   /// @dev The unique ID of the ticket.
   uint64 id;
