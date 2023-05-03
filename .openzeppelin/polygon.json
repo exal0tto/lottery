@@ -5,6 +5,11 @@
       "address": "0x32FF8F92b415AcC0d3187F0d0Fa0b01D6e9f5E6A",
       "txHash": "0xcd37eda3bfd0b016c2d04cf4565697d6fc967caa95c658f68efb1f8eaa735c82",
       "kind": "uups"
+    },
+    {
+      "address": "0x3b15D70Fbf7bc36FfC719DFdf15f825e829BdE16",
+      "txHash": "0x6ba62869960a746db151714c3c0e564f894658d158c9d97ff09e47e9514ce309",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -332,6 +337,388 @@
               },
               {
                 "label": "timestamp",
+                "type": "t_uint128",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "id",
+                "type": "t_uint64",
+                "offset": 16,
+                "slot": "1"
+              },
+              {
+                "label": "round",
+                "type": "t_uint32",
+                "offset": 24,
+                "slot": "1"
+              },
+              {
+                "label": "cardinality",
+                "type": "t_uint16",
+                "offset": 28,
+                "slot": "1"
+              },
+              {
+                "label": "withdrawn",
+                "type": "t_bool",
+                "offset": 30,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint128": {
+            "label": "uint128",
+            "numberOfBytes": "16"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint32": {
+            "label": "uint32",
+            "numberOfBytes": "4"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "2b319a048f7e3abeb930cf262aaf25a14a5e8ca8eede6a7242a58f04931d305c": {
+      "address": "0x565D6da4336FeD73429AC015Ce71642E389fF30a",
+      "txHash": "0x2fd8431c8423e8ab33187f7b602cb18c59d5732b1ba4a3cdc6ff9c5c0394ed51",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "vrfCoordinator",
+            "offset": 0,
+            "slot": "301",
+            "type": "t_contract(VRFCoordinatorV2Interface)294",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:87"
+          },
+          {
+            "label": "_ticketsByPlayer",
+            "offset": 0,
+            "slot": "302",
+            "type": "t_mapping(t_address,t_array(t_struct(TicketData)19663_storage)dyn_storage)",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:92"
+          },
+          {
+            "label": "playersByTicket",
+            "offset": 0,
+            "slot": "303",
+            "type": "t_array(t_address_payable)dyn_storage",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:96"
+          },
+          {
+            "label": "_rounds",
+            "offset": 0,
+            "slot": "304",
+            "type": "t_array(t_struct(RoundData)15382_storage)dyn_storage",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:101"
+          },
+          {
+            "label": "_open",
+            "offset": 0,
+            "slot": "305",
+            "type": "t_bool",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:106"
+          },
+          {
+            "label": "_nextDrawTime",
+            "offset": 0,
+            "slot": "306",
+            "type": "t_uint256",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:109"
+          },
+          {
+            "label": "partnersByReferralCode",
+            "offset": 0,
+            "slot": "307",
+            "type": "t_mapping(t_bytes32,t_address)",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:112"
+          },
+          {
+            "label": "referralCodesByPartner",
+            "offset": 0,
+            "slot": "308",
+            "type": "t_mapping(t_address,t_array(t_bytes32)dyn_storage)",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:115"
+          },
+          {
+            "label": "_lastWithdrawRoundByReferralCode",
+            "offset": 0,
+            "slot": "309",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "Lottery",
+            "src": "contracts/Lottery.sol:120"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address_payable)dyn_storage": {
+            "label": "address payable[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(RoundData)15382_storage)dyn_storage": {
+            "label": "struct Lottery.RoundData[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(TicketData)19663_storage)dyn_storage": {
+            "label": "struct TicketData[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)5_storage": {
+            "label": "uint256[5]",
+            "numberOfBytes": "160"
+          },
+          "t_array(t_uint8)6_storage": {
+            "label": "uint8[6]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(VRFCoordinatorV2Interface)294": {
+            "label": "contract VRFCoordinatorV2Interface",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_bytes32)dyn_storage)": {
+            "label": "mapping(address => bytes32[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_struct(TicketData)19663_storage)dyn_storage)": {
+            "label": "mapping(address => struct TicketData[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_address)": {
+            "label": "mapping(bytes32 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(RoundData)15382_storage": {
+            "label": "struct Lottery.RoundData",
+            "members": [
+              {
+                "label": "baseTicketPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "ticketIndex",
+                "type": "t_mapping(t_uint256,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "prizes",
+                "type": "t_array(t_uint256)5_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "stash",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "totalCombinations",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "combinationsByReferralCode",
+                "type": "t_mapping(t_bytes32,t_uint256)",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "drawBlockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "vrfRequestId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "numbers",
+                "type": "t_array(t_uint8)6_storage",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "closureBlockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "winners",
+                "type": "t_array(t_uint256)5_storage",
+                "offset": 0,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "608"
+          },
+          "t_struct(TicketData)19663_storage": {
+            "label": "struct TicketData",
+            "members": [
+              {
+                "label": "hash",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "blockNumber",
                 "type": "t_uint128",
                 "offset": 0,
                 "slot": "1"

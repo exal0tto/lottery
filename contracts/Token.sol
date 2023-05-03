@@ -16,7 +16,7 @@ contract LotteryToken is ERC20, ERC20Burnable, ERC20Votes {
   }
 
   /// @notice Returns the total delegated voting power.
-  function getTotalDelegatedVotes() public view returns (uint256) {
+  function getTotalVotes() public view returns (uint256) {
     if (_totalDelegationCheckpoints.length > 0) {
       return _totalDelegationCheckpoints[_totalDelegationCheckpoints.length - 1].votes;
     } else {
@@ -25,7 +25,7 @@ contract LotteryToken is ERC20, ERC20Burnable, ERC20Votes {
   }
 
   /// @notice Returns the total delegated voting power at a past point in time.
-  function getPastTotalDelegatedVotes(uint256 blockNumber) public view returns (uint256) {
+  function getPastTotalVotes(uint256 blockNumber) public view returns (uint256) {
     uint i = 0;
     uint j = _totalDelegationCheckpoints.length;
     while (i < j) {
@@ -54,7 +54,7 @@ contract LotteryToken is ERC20, ERC20Burnable, ERC20Votes {
     super._afterTokenTransfer(from, to, amount);
     address fromDelegatee = delegates(from);
     address toDelegatee = delegates(to);
-    uint256 votes = getTotalDelegatedVotes();
+    uint256 votes = getTotalVotes();
     if (fromDelegatee == address(0) && toDelegatee != address(0)) {
       votes += amount;
     }
@@ -70,7 +70,7 @@ contract LotteryToken is ERC20, ERC20Burnable, ERC20Votes {
   function _delegate(address delegator, address delegatee) internal override {
     address formerDelegatee = delegates(delegator);
     super._delegate(delegator, delegatee);
-    uint256 votes = getTotalDelegatedVotes();
+    uint256 votes = getTotalVotes();
     if (formerDelegatee == address(0) && delegatee != address(0)) {
       votes += balanceOf(delegator);
     }

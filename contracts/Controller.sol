@@ -115,8 +115,11 @@ contract LotteryController is TimelockController, Pausable, ReentrancyGuard {
     Revenue storage revenue = _revenue[index];
     blockNumber = revenue.blockNumber;
     globalRevenue = revenue.value;
-    accountRevenue = revenue.value * token.getPastVotes(account, blockNumber) /
-        token.getPastTotalDelegatedVotes(blockNumber);
+    accountRevenue = 0;
+    uint256 totalVotes = token.getPastTotalVotes(blockNumber);
+    if (totalVotes > 0) {
+      accountRevenue = revenue.value * token.getPastVotes(account, blockNumber) / totalVotes;
+    }
   }
 
   function _getFirstUnclaimedRound(address account) private view returns (uint) {
@@ -140,7 +143,7 @@ contract LotteryController is TimelockController, Pausable, ReentrancyGuard {
     revenue = 0;
     for (uint i = _getFirstUnclaimedRound(account); i < _revenue.length; i++) {
       uint256 pastBlock = _revenue[i].blockNumber;
-      uint256 pastTotalVotes = token.getPastTotalDelegatedVotes(pastBlock);
+      uint256 pastTotalVotes = token.getPastTotalVotes(pastBlock);
       if (pastTotalVotes > 0) {
         revenue += _revenue[i].value * token.getPastVotes(account, pastBlock) / pastTotalVotes;
       }

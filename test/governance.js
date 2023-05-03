@@ -28,15 +28,12 @@ describe('Governance', () => {
     signer = await deployer.getDefaultSigner();
     vrfCoordinator = await deployer.deployMockVRFCoordinator();
     await vrfCoordinator.createSubscription();
-    const contracts = await deployer.deployAll(vrfCoordinator.address);
+    const contracts = await deployer.deployGovernance(vrfCoordinator.address);
     token = contracts.token;
     lottery = contracts.lottery;
     controller = contracts.controller;
     await vrfCoordinator.addConsumer(subscriptionId, lottery.address);
-    token.delegate(signer);
-    await helpers.mine();
-    console.log('signer:', signer);
-    console.log('signer\'s balance:', (await token.balanceOf(signer)).toBigInt());
+    await token.delegate(signer);
   });
 
   beforeEach(async () => {
