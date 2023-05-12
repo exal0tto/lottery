@@ -412,7 +412,7 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     uint256 hash = _rounds[currentRound].ticketIndex.indexTicket(numbers);
     _ticketsByPlayer[msg.sender].push(TicketData({
       hash: hash,
-      timestamp: uint128(block.timestamp),
+      blockNumber: uint128(block.number),
       id: uint64(ticketId),
       round: uint32(currentRound),
       cardinality: uint16(numbers.length),
@@ -444,7 +444,7 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     uint256 hash = _rounds[currentRound].ticketIndex.indexTicket6(numbers);
     _ticketsByPlayer[msg.sender].push(TicketData({
       hash: hash,
-      timestamp: uint128(block.timestamp),
+      blockNumber: uint128(block.number),
       id: uint64(ticketId),
       round: uint32(currentRound),
       cardinality: uint16(numbers.length),
@@ -474,10 +474,10 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
   /// @notice Returns information about the ticket with the specified ID.
   /// @return player The account who bought the ticket.
   /// @return round The number of the round when the ticket was bought.
-  /// @return timestamp The time (in seconds) when the ticket was bought.
+  /// @return blockNumber The block number at which the ticket was bought.
   /// @return numbers The numbers of the ticket.
   function getTicket(uint ticketId) public view returns (
-      address player, uint round, uint256 timestamp, uint8[] memory numbers)
+      address player, uint round, uint256 blockNumber, uint8[] memory numbers)
   {
     player = playersByTicket[ticketId];
     if (player == address(0)) {
@@ -486,8 +486,8 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     TicketData storage ticket;
     (ticket, numbers) = _ticketsByPlayer[player].getTicketAndNumbers(ticketId);
     round = ticket.round;
-    timestamp = ticket.timestamp;
-    return (player, round, timestamp, numbers);
+    blockNumber = ticket.blockNumber;
+    return (player, round, blockNumber, numbers);
   }
 
   /// @notice Returns information about a round. Reverts if `roundNumber` is 0 or refers to the
