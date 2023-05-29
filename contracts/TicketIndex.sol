@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 
-/// @notice This library manages an index data structure that allows retrieving the tickets that
-///   played a given combination of numbers efficiently in O(1).
+/// @notice This library manages an index data structure that allows retrieving the tickets with a
+///   given combination of numbers efficiently in O(1).
 /// @notice The data structure is stored as a `mapping(uint256 => uint)` whose keys are "hashes" of
 ///   ticket numbers and the values are the number of times those numbers have been played in a
 ///   ticket. The hashes are calculated by multiplying the prime numbers corresponding to the played
