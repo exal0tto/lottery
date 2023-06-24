@@ -55,7 +55,7 @@ describe('Lottery', () => {
 
   const buyTicket = async numbers => {
     const price = await playerLottery.getTicketPrice(numbers);
-    await playerLottery.buyTicket(NULL_REFERRAL_CODE, numbers, {value: price});
+    await playerLottery.createTicket(NULL_REFERRAL_CODE, numbers, {value: price});
   };
 
   const draw = async () => {
@@ -158,14 +158,14 @@ describe('Lottery', () => {
     it('picks up ticket fees', async () => {
       const numbers = [1, 2, 3, 4, 5, 6];
       const price = (await lottery.getTicketPrice(numbers)).toBigInt();
-      await lottery.buyTicket(REFERRAL_CODE1, numbers, {value: price});
+      await lottery.createTicket(REFERRAL_CODE1, numbers, {value: price});
       expect(await lottery.getPartnerRevenue(REFERRAL_CODE1)).to.equal(price / 10n);
     });
 
     it('doesn\'t pick up owner fees', async () => {
       const numbers = [1, 2, 3, 4, 5, 6];
       const price = (await lottery.getTicketPrice(numbers)).toBigInt();
-      await lottery.buyTicket(NULL_REFERRAL_CODE, numbers, {value: price});
+      await lottery.createTicket(NULL_REFERRAL_CODE, numbers, {value: price});
       expect(await lottery.getPartnerRevenue(REFERRAL_CODE1)).to.equal(0);
     });
   });
@@ -174,7 +174,7 @@ describe('Lottery', () => {
     it('1 ticket, w/o referral', async () => {
       const numbers = [1, 2, 3, 4, 5, 6, 7];
       const price = (await lottery.getTicketPrice(numbers)).toBigInt();
-      await lottery.buyTicket(NULL_REFERRAL_CODE, numbers, {value: price});
+      await lottery.createTicket(NULL_REFERRAL_CODE, numbers, {value: price});
       const value = price - price / 10n * 2n;
       expect(await lottery.getPrizes()).to.deep.equal([
         value * 188n / 1000n,
@@ -193,7 +193,7 @@ describe('Lottery', () => {
     it('1 ticket, w/ referral', async () => {
       const numbers = [1, 2, 3, 4, 5, 6, 7];
       const price = (await lottery.getTicketPrice(numbers)).toBigInt();
-      await lottery.buyTicket(REFERRAL_CODE1, numbers, {value: price});
+      await lottery.createTicket(REFERRAL_CODE1, numbers, {value: price});
       const value = price - price / 10n * 2n;
       expect(await lottery.getPrizes()).to.deep.equal([
         value * 188n / 1000n,
@@ -212,9 +212,9 @@ describe('Lottery', () => {
     it('2 tickets', async () => {
       const numbers1 = [11, 12, 13, 14, 15, 16, 17];
       const price = (await lottery.getTicketPrice(numbers1)).toBigInt();
-      await lottery.buyTicket(NULL_REFERRAL_CODE, numbers1, {value: price});
+      await lottery.createTicket(NULL_REFERRAL_CODE, numbers1, {value: price});
       const numbers2 = [21, 22, 23, 24, 25, 26, 27];
-      await lottery.buyTicket(REFERRAL_CODE1, numbers2, {value: price});
+      await lottery.createTicket(REFERRAL_CODE1, numbers2, {value: price});
       const value = price * 2n - price * 2n / 10n * 2n;
       expect(await lottery.getPrizes()).to.deep.equal([
         value * 188n / 1000n,

@@ -121,7 +121,9 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
 
   error ReferralCodeAlreadyExistsError(bytes32 referralCode);
   error SalesAreClosedError();
+  error InvalidNumberError(uint8 number);
   error InvalidNumbersError(uint8[] numbers);
+  error DuplicateNumberError(uint8 number);
   error InvalidValueError(uint8[] numbers, uint256 expectedValue, uint256 actualValue);
   error InvalidReferralCodeError(bytes32 referralCode);
   error InvalidStateError();
@@ -182,6 +184,14 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
   }
 
   function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+
+  /// @dev Calculates the binomial coefficient (n choose 5).
+  function _choose5(uint n) private pure returns (uint) {
+    if (n < 5) {
+      return 0;
+    }
+    return n * (n - 1) * (n - 2) * (n - 3) * (n - 4) / 120;
+  }
 
   /// @dev Calculates the binomial coefficient (n choose 6).
   function _choose6(uint n) private pure returns (uint) {
@@ -366,11 +376,11 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     }
     for (uint i = 0; i < numbers.length; i++) {
       if (numbers[i] < 1 || numbers[i] > 90) {
-        revert InvalidNumbersError(numbers);
+        revert InvalidNumberError(numbers[i]);
       }
       for (uint j = i + 1; j < numbers.length; j++) {
         if (numbers[i] == numbers[j]) {
-          revert InvalidNumbersError(numbers);
+          revert DuplicateNumberError(numbers[i]);
         }
       }
     }
@@ -389,14 +399,14 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     return _getCurrentRoundData().baseTicketPrice * _choose6(numbers.length);
   }
 
-  /// @notice Buys a lottery ticket. The ticket will be associated to `msg.sender`, which will be
-  ///   the only account able to withdraw any prizes attributed to the ticket. `msg.value` MUST be
-  ///   the value returned by `getTicketPrice()` with the same numbers.
+  /// @notice Creates a lottery ticket in the current round. The ticket will be associated to
+  ///   `msg.sender`, which will be the only account able to withdraw any prizes attributed to it.
+  ///   `msg.value` MUST be the value returned by `getTicketPrice()` with the same numbers.
   /// @param referralCode An optional referral code; if specified it must be valid, i.e. it must
   ///   have been claimed using `claimReferralCode` or `makeReferralCode`.
   /// @param numbers The numbers of the ticket. Must be at least 6 and at most 90, and all must be
   ///   in the range [1, 90].
-  function buyTicket(bytes32 referralCode, uint8[] calldata numbers) public payable whenNotPaused {
+  function createTicket(bytes32 referralCode, uint8[] calldata numbers) public payable whenNotPaused {
     _validateTicket(numbers);
     uint combinations = _choose6(numbers.length);
     uint currentRound = getCurrentRound();
@@ -424,9 +434,9 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     emit Ticket(currentRound, msg.sender, ticketId, numbers, referralCode);
   }
 
-  /// @notice Buys a lottery ticket with 6 numbers. This is exactly the same as calling `buyTicket`
-  ///   with 6 numbers, but consumes a bit less gas.
-  function buyTicket6(bytes32 referralCode, uint8[6] calldata numbers)
+  /// @notice Creates a lottery ticket with 6 numbers. This is exactly the same as calling
+  ///   `createTicket` with 6 numbers, but consumes a less gas.
+  function createTicket6(bytes32 referralCode, uint8[6] calldata numbers)
       public payable whenNotPaused
   {
     require(_open);
@@ -454,6 +464,40 @@ contract Lottery is UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable,
     _rounds[currentRound].totalCombinations++;
     _rounds[currentRound].combinationsByReferralCode[referralCode]++;
     emit Ticket6(currentRound, msg.sender, ticketId, numbers, referralCode);
+  }
+
+  /// @notice Adds the given number to an already existing ticket. Since indexing tickets consumes a
+  ///   lot of gas, this method can be used to split the purchase of a ticket into multiple
+  ///   transactions.
+  function addNumberToTicket(uint ticketId, bytes32 referralCode, uint8 number)
+      public payable whenNotPaused
+  {
+    if (!_open) {
+      revert InvalidStateError();
+    }
+    if (number < 1 || number > 90) {
+      revert InvalidNumberError(number);
+    }
+    address partnerAccount = partnersByReferralCode[referralCode];
+    if (referralCode != 0 && partnerAccount == address(0)) {
+      revert InvalidReferralCodeError(referralCode);
+    }
+    TicketData storage ticket = _ticketsByPlayer[msg.sender].getTicket(ticketId);
+    uint currentRound = getCurrentRound();
+    if (ticket.round != currentRound) {
+      revert InvalidTicketIdError(ticketId);
+    }
+    uint prime = TicketIndex.getPrime(number);
+    if (ticket.hash % prime == 0) {
+      revert DuplicateNumberError(number);
+    }
+    ticket.hash *= prime;
+    uint additionalCombinations = _choose5(ticket.cardinality);
+    ticket.cardinality++;
+    // TODO: index additional combinations.
+    _rounds[currentRound].totalCombinations += additionalCombinations;
+    _rounds[currentRound].combinationsByReferralCode[referralCode] += additionalCombinations;
+    // TODO: emit logs.
   }
 
   /// @notice Returns the IDs of all the ticket ever bought by a player.

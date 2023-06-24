@@ -48,7 +48,7 @@ describe('Governance', () => {
 
   const buyTicket = async numbers => {
     const price = await lottery.getTicketPrice(numbers);
-    await lottery.buyTicket(NULL_REFERRAL_CODE, numbers, {value: price});
+    await lottery.createTicket(NULL_REFERRAL_CODE, numbers, {value: price});
   };
 
   const draw = async () => {
